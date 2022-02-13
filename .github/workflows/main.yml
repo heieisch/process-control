@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["windows-latest"]
+        os: ["ubuntu-latest", "macos-latest", "windows-latest"]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -19,6 +19,7 @@ jobs:
           environment-file: environment.yml
           python-version: 3.6
           auto-activate-base: false
+          channel-priority: flexible
       - name: Conda info
         shell: bash -l {0}
         run: conda info
