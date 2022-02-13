@@ -1,0 +1,29 @@
+name: UnitTest
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["windows-latest"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: anaconda-client-env
+          condarc-file: environment.condarc
+          environment-file: environment.yml
+          python-version: 3.6
+          auto-activate-base: false
+      - name: Conda info
+        shell: bash -l {0}
+        run: conda info
+      - name: Conda list
+        shell: pwsh
+        run: conda list
+      - name: Run Test
+        run: python -m unittest discover tests
