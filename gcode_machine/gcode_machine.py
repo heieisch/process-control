@@ -197,36 +197,36 @@ class GcodeMachine:
         self._axes_words = ["X", "Y", "Z"]
         for i in range(0, 3):
             word = self._axes_words[i]
-            self._axes_regexps.append(re.compile(".*" + word + "([-.\d]+)"))
+            self._axes_regexps.append(re.compile(".*" + word + r"([-.\d]+)"))
             
         self._offset_regexps = []
         self._offset_words = ["I", "J", "K"]
         for i in range(0, 3):
             word = self._offset_words[i]
-            self._offset_regexps.append(re.compile(".*" + word + "([-.\d]+)"))
+            self._offset_regexps.append(re.compile(".*" + word + r"([-.\d]+)"))
             
-        self._re_radius = re.compile(".*CR=([-.\d]+)")
+        self._re_radius = re.compile(r".*CR=([-.\d]+)")
         
-        self._re_use_var = re.compile("#(\d*)")
-        self._re_set_var = re.compile("^\s*#(\d+)=([\d.-]+)")
+        self._re_use_var = re.compile(r"#(\d*)")
+        self._re_set_var = re.compile(r"^\s*#(\d+)=([\d.-]+)")
         
-        self._re_feed = re.compile(".*F([.\d]+)")
+        self._re_feed = re.compile(r".*F([.\d]+)")
         self._re_feed_replace = re.compile(r"F[.\d]+")
         
-        self._re_spindle = re.compile(".*S([\d]+)")
+        self._re_spindle = re.compile(r".*S([\d]+)")
         self._re_spindle_replace = re.compile(r"S[.\d]+")
         
-        self._re_motion_mode = re.compile("G([0123])*([^\\d]|$)")
-        self._re_distance_mode = re.compile("(G9[01])([^\d]|$)")
-        self._re_plane_mode = re.compile("(G1[789])([^\d]|$)")
-        self._re_cs = re.compile("(G5[4-9])")
+        self._re_motion_mode = re.compile(r"G([0123])*([^\\d]|$)")
+        self._re_distance_mode = re.compile(r"(G9[01])([^\d]|$)")
+        self._re_plane_mode = re.compile(r"(G1[789])([^\d]|$)")
+        self._re_cs = re.compile(r"(G5[4-9])")
         
-        self._re_comment_paren_convert = re.compile("(.*)\((.*?)\)\s*$")
+        self._re_comment_paren_convert = re.compile(r"(.*)\((.*?)\)\s*$")
         self._re_comment_paren_replace = re.compile(r"\(.*?\)")
-        self._re_comment_get_comment = re.compile("(.*?)(;.*)")
+        self._re_comment_get_comment = re.compile(r"(.*?)(;.*)")
         
-        self._re_match_cmd_number = re.compile("([GMT])(\d+)")
-        self._re_expand_multicommands = re.compile("([GMT])")
+        self._re_match_cmd_number = re.compile(r"([GMT])(\d+)")
+        self._re_expand_multicommands = re.compile(r"([GMT])")
 
 
         ## @var whitelist_commands
@@ -349,7 +349,7 @@ class GcodeMachine:
         commands and returns a list of commands. Machine state is not
         changed.
         """
-        commands = re.sub(self._re_expand_multicommands, "\n\g<0>", self.line).strip()
+        commands = re.sub(self._re_expand_multicommands, r"\n\g<0>", self.line).strip()
         lines = commands.split("\n")
         lines[0] = lines[0] + self.comment # preserve comment
         return lines
@@ -605,7 +605,7 @@ class GcodeMachine:
         """
         
         # transform () comment at end of line into semicolon comment
-        self.line = re.sub(self._re_comment_paren_convert, "\g<1>;\g<2>", self.line)
+        self.line = re.sub(self._re_comment_paren_convert, r"\g<1>;\g<2>", self.line)
         
         # remove all in-line () comments
         self.line = re.sub(self._re_comment_paren_replace, "", self.line)
